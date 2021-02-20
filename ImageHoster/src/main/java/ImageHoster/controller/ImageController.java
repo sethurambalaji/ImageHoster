@@ -1,8 +1,10 @@
 package ImageHoster.controller;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.model.Tag;
 import ImageHoster.model.User;
+import ImageHoster.service.CommentService;
 import ImageHoster.service.ImageService;
 import ImageHoster.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -27,6 +30,9 @@ public class ImageController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private CommentService commentService;
 
     //This method displays all the images in the user home page after successful login
     @RequestMapping("images")
@@ -47,10 +53,11 @@ public class ImageController {
     //Here a list of tags is added in the Model type object
     //this list is then sent to 'images/image.html' file and the tags are displayed
     @RequestMapping("/images/{imageId}/{title}")
-    public String showImage(@PathVariable("imageId") Integer imageId,@PathVariable("title") String title, Model model) {
+    public String showImage(@PathVariable("imageId") Integer imageId,@PathVariable("title") String title,Model model) {
         Image image = imageService.getImageByTitle(imageId,title);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
+        model.addAttribute("comments",image.getComments());
         return "images/image";
     }
 
@@ -206,4 +213,22 @@ public class ImageController {
 
         return tagString.toString();
     }
+
+    //Method used to create Comment for corresponding Image
+    //Once comment entered and submitted it is then added with
+    //other comments below the image
+    @RequestMapping(value="/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
+    private String createComment(@RequestParam("comment") String commentBody,Comment comment,
+                                 @PathVariable("imageId") Integer imageId,
+                                 HttpSession session){
+        System.out.println("******Entering Create COmment method in Image Controller ******");
+        comment.setCreatedDate(LocalDate.now());
+        comment.setText(commentBody);
+        Image image = imageService.getImage(imageId);
+        comment.setImage(image);
+        comment.setUser((User)session.getAttribute("loggeduser"));
+        commentService.createComment(comment);
+        return "redirect:/images/"+imageId+"/"+image.getTitle();
+    }
+
 }
