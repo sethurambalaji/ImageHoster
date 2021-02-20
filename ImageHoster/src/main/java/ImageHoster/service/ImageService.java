@@ -1,6 +1,7 @@
 package ImageHoster.service;
 
 import ImageHoster.model.Image;
+import ImageHoster.model.User;
 import ImageHoster.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,4 +47,8 @@ public class ImageService {
         imageRepository.deleteImage(imageId);
     }
 
+    //The method checks whether the current shown Image owner and current user are the same person
+    public boolean checkOwner(User user, User loggedUser) {
+       return user.getId()==loggedUser.getId();
+    }
 }
