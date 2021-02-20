@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,7 +41,12 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
+    public String registerUser(User user, RedirectAttributes redirectAttributes) {
+        if(!userService.isValidPassword(user.getPassword())){
+            String passwordTypeError = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
+            redirectAttributes.addAttribute("passwordTypeError",passwordTypeError).addFlashAttribute("passwordTypeError",passwordTypeError);
+            return "redirect:/users/registration";
+        }
         userService.registerUser(user);
         return "redirect:/users/login";
     }

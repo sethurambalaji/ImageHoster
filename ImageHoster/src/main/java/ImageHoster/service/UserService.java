@@ -5,6 +5,9 @@ import ImageHoster.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 public class UserService {
 
@@ -32,4 +35,27 @@ public class UserService {
         }
     }
 
+    //Method Used to Validate the password before registration
+    public boolean isValidPassword(String password) {
+        //regular expression for atleast 1 alphabet 1number and 1 special character
+        String regex = "^(?=.*[a-z]|[A-Z])"
+                +"(?=.*[0-9])"
+                +"(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{3,16}$";
+
+        //Compiling Regular Expression
+        Pattern passwordPattern = Pattern.compile(regex);
+
+        //returns null if no password entered in the text box
+        if (password == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method to find matching between given password
+        // and regular expression.
+        Matcher matchRegex = passwordPattern.matcher(password);
+
+        // Return if the password matches the ReGex
+        return matchRegex.matches();
+
+    }
 }
