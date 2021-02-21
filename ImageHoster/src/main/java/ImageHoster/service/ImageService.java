@@ -47,8 +47,4 @@ public class ImageService {
         imageRepository.deleteImage(imageId);
     }
 
-    //The method checks whether the current shown Image owner and current user are the same person
-    public boolean checkOwner(User user, User loggedUser) {
-       return user.getId()==loggedUser.getId();
-    }
 }
