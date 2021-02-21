@@ -31,8 +31,6 @@ public class ImageController {
     @Autowired
     private TagService tagService;
 
-    @Autowired
-    private CommentService commentService;
 
     //This method displays all the images in the user home page after successful login
     @RequestMapping("images")
@@ -214,21 +212,6 @@ public class ImageController {
         return tagString.toString();
     }
 
-    //Method used to create Comment for corresponding Image
-    //Once comment entered and submitted it is then added with
-    //other comments below the image
-    @RequestMapping(value="/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
-    private String createComment(@RequestParam("comment") String commentBody,Comment comment,
-                                 @PathVariable("imageId") Integer imageId,
-                                 HttpSession session){
-        System.out.println("******Entering Create COmment method in Image Controller ******");
-        comment.setCreatedDate(LocalDate.now());
-        comment.setText(commentBody);
-        Image image = imageService.getImage(imageId);
-        comment.setImage(image);
-        comment.setUser((User)session.getAttribute("loggeduser"));
-        commentService.createComment(comment);
-        return "redirect:/images/"+imageId+"/"+image.getTitle();
-    }
+
 
 }
