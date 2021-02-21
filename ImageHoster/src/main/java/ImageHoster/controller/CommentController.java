@@ -30,7 +30,6 @@ public class CommentController {
     private String createComment(@RequestParam("comment") String commentBody, Comment comment,
                                  @PathVariable("imageId") Integer imageId,
                                  HttpSession session){
-        System.out.println("******Entering Create COmment method in Image Controller ******");
         comment.setCreatedDate(LocalDate.now());
         comment.setText(commentBody);
         Image image = imageService.getImage(imageId);

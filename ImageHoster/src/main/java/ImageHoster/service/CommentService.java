@@ -13,10 +13,12 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
+    //Method to Create comment and store it in database
     public void createComment(Comment comment) {
          commentRepository.createComment(comment);
     }
 
+    //Method to get list of all comments for corresponding image from database
     public List<Comment> showComments(Integer imageId) {
         return commentRepository.getAllComments(imageId);
     }

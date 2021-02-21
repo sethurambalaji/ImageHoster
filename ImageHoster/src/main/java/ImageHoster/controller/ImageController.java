@@ -46,7 +46,6 @@ public class ImageController {
     //Call the getImageByTitle() method in the business logic to fetch all the details of that image
     //Add the image in the Model type object with 'image' as the key
     //Return 'images/image.html' file
-
     //Also now you need to add the tags of an image in the Model type object
     //Here a list of tags is added in the Model type object
     //this list is then sent to 'images/image.html' file and the tags are displayed
@@ -100,14 +99,15 @@ public class ImageController {
     @RequestMapping(value = "/editImage")
     public String editImage(@RequestParam("imageId") Integer imageId, Model model,
                             HttpSession session,RedirectAttributes redirect) {
+
         Image image = imageService.getImage(imageId);
         User loggedInUser = (User) session.getAttribute("loggeduser");
+
         if(loggedInUser.getId().equals(image.getUser().getId())){
             String tags = convertTagsToString(image.getTags());
             model.addAttribute("image", image);
             model.addAttribute("tags", tags);
             return "images/edit";
-
 
         }
         else {
@@ -116,6 +116,7 @@ public class ImageController {
             redirect.addAttribute("editError", error).addFlashAttribute("editError", error);
             return "redirect:images/" + imageId + "/" + imgTitle;
         }
+
     }
 
     //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
@@ -225,7 +226,5 @@ public class ImageController {
 
         return tagString.toString();
     }
-
-
 
 }

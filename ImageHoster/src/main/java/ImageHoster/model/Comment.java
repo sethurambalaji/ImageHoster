@@ -17,10 +17,12 @@ public class Comment {
     @Column
     private LocalDate createdDate;
 
+    //Comment to User have Many to one relationship
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
+    //Comment to Image have Many to one relationship
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="image_id")
     private Image image;
